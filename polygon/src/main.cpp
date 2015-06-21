@@ -59,7 +59,6 @@ ADD_FIELD_TO_NODE(POLYGON_SHAPE,FMesh,field::Mesh,field::connection::In,FMesh(),
 // testIn
 ADD_FIELD_TO_NODE(POLYGON_SHAPE,int,field::Int,field::connection::In,10,2)
 
-
 namespace feather
 {
 
@@ -131,13 +130,16 @@ namespace feather
 
                 glPolygonMode(GL_FRONT, GL_FILL);
                 glPolygonMode(GL_BACK, GL_LINE);
-                glDrawArrays(GL_QUADS, 0, tf->value.v.size());
+                //glDrawArrays(GL_QUADS, 0, tf->value.v.size());
+                //glDrawElements(GL_QUADS, tf->value.vn.size(), GL_UNSIGNED_INT, &indics[0]);
+                glDrawElements(GL_QUADS, tf->value.i.size(), GL_UNSIGNED_INT, &tf->value.i[0]);
 
                 color.setRgb(0,0,0);
                 info.program->setAttributeValue(node.glShaderDiffuse, color);
                 glLineWidth(4.5);
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                glDrawArrays(GL_QUADS, 0, tf->value.vn.size());
+                //glDrawArrays(GL_QUADS, 0, tf->value.vn.size());
+                glDrawElements(GL_QUADS, tf->value.i.size(), GL_UNSIGNED_INT, &tf->value.i[0]);
 
                 info.program->disableAttributeArray(node.glVertex);
                 info.program->disableAttributeArray(node.glNormal);
@@ -240,25 +242,25 @@ namespace feather
                 meshOut->value.i.push_back(6);
                 meshOut->value.i.push_back(7);
                 // Top 
-                meshOut->value.i.push_back(0);
-                meshOut->value.i.push_back(4);
-                meshOut->value.i.push_back(5);
                 meshOut->value.i.push_back(3);
+                meshOut->value.i.push_back(5);
+                meshOut->value.i.push_back(4);
+                meshOut->value.i.push_back(0);
                 // Bottom 
                 meshOut->value.i.push_back(1);
-                meshOut->value.i.push_back(5);
+                meshOut->value.i.push_back(7);
                 meshOut->value.i.push_back(6);
                 meshOut->value.i.push_back(2);
                 // Left 
+                meshOut->value.i.push_back(6);
+                meshOut->value.i.push_back(5);
+                meshOut->value.i.push_back(3);
+                meshOut->value.i.push_back(2);
+                // Right 
+                meshOut->value.i.push_back(1);
                 meshOut->value.i.push_back(0);
                 meshOut->value.i.push_back(4);
                 meshOut->value.i.push_back(7);
-                meshOut->value.i.push_back(1);
-                // Right 
-                meshOut->value.i.push_back(2);
-                meshOut->value.i.push_back(5);
-                meshOut->value.i.push_back(6);
-                meshOut->value.i.push_back(3);
             }
 
             subX->update = false;
