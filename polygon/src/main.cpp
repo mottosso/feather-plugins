@@ -107,8 +107,6 @@ namespace feather
         { 
             if(tf->value.v.size() >= 4)
             {
-                //std::cout << "drawing CUBE\n";
-
                 QVector3D lpos;
                 lpos.setX(4);
                 lpos.setY(20);
@@ -130,15 +128,12 @@ namespace feather
 
                 glPolygonMode(GL_FRONT, GL_FILL);
                 glPolygonMode(GL_BACK, GL_LINE);
-                //glDrawArrays(GL_QUADS, 0, tf->value.v.size());
-                //glDrawElements(GL_QUADS, tf->value.vn.size(), GL_UNSIGNED_INT, &indics[0]);
                 glDrawElements(GL_QUADS, tf->value.i.size(), GL_UNSIGNED_INT, &tf->value.i[0]);
 
                 color.setRgb(0,0,0);
                 info.program->setAttributeValue(node.glShaderDiffuse, color);
                 glLineWidth(4.5);
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                //glDrawArrays(GL_QUADS, 0, tf->value.vn.size());
                 glDrawElements(GL_QUADS, tf->value.i.size(), GL_UNSIGNED_INT, &tf->value.i[0]);
 
                 info.program->disableAttributeArray(node.glVertex);
