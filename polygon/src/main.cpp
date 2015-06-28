@@ -103,6 +103,7 @@ namespace feather
             tf = static_cast<targetdata>(scenegraph::get_fieldBase(f->puid,f->pn,f->pf));
         }
 
+        
         if(tf!=NULL)
         { 
             if(tf->value.v.size() >= 4)
@@ -197,8 +198,33 @@ namespace feather
         SubIn subY = static_cast<SubIn>(fields.at(2));
         SubIn subZ = static_cast<SubIn>(fields.at(3));
 
+        int fcount = (subX->value+1)*2 + (subY->value+1)*2 + (subZ->value+1)*2;
+        int vcount = fcount + 2;
+
         if(subX->update || subY->update || subZ->update)
         {
+            // clear the mesh
+            meshOut->value.v.clear();
+            meshOut->value.vn.clear();
+            meshOut->value.i.clear();
+
+
+            // there are 3 side, each will be subdiv by it's sub axis value
+            // the front and back of each axis are created
+            int side = 0;
+            float maxV = 1.0;
+            float minV = -1.0;
+            float spanX = 2.0;
+            float spanY = 2.0;
+
+            /* 
+            while(side < 3) {
+                // front
+                // create each face
+                meshOut->value.v.push_back(FVertex3D(1.0,1.0,1.0);    
+            }
+            */
+
             if(!meshOut->value.v.size())
             {
                 // VERTICS
@@ -225,43 +251,60 @@ namespace feather
                 meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
                 meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
 
-                // ID's
-                // Front
-                meshOut->value.i.push_back(0);
-                meshOut->value.i.push_back(1);
-                meshOut->value.i.push_back(2);
-                meshOut->value.i.push_back(3);
-                // Back 
-                meshOut->value.i.push_back(4);
-                meshOut->value.i.push_back(5);
-                meshOut->value.i.push_back(6);
-                meshOut->value.i.push_back(7);
-                // Top 
-                meshOut->value.i.push_back(3);
-                meshOut->value.i.push_back(5);
-                meshOut->value.i.push_back(4);
-                meshOut->value.i.push_back(0);
-                // Bottom 
-                meshOut->value.i.push_back(1);
-                meshOut->value.i.push_back(7);
-                meshOut->value.i.push_back(6);
-                meshOut->value.i.push_back(2);
-                // Left 
-                meshOut->value.i.push_back(6);
-                meshOut->value.i.push_back(5);
-                meshOut->value.i.push_back(3);
-                meshOut->value.i.push_back(2);
-                // Right 
-                meshOut->value.i.push_back(1);
-                meshOut->value.i.push_back(0);
-                meshOut->value.i.push_back(4);
-                meshOut->value.i.push_back(7);
+                FFace f;           
+                // front face 
+                f.push_back(FFacePoint(0,0,0));
+                f.push_back(FFacePoint(1,0,1));
+                f.push_back(FFacePoint(2,0,2));
+                f.push_back(FFacePoint(3,0,3));
+                meshOut->value.add_face(f);
+                f.clear();
+                // back face 
+                f.push_back(FFacePoint(4,0,4));
+                f.push_back(FFacePoint(5,0,5));
+                f.push_back(FFacePoint(6,0,6));
+                f.push_back(FFacePoint(7,0,7));
+                meshOut->value.add_face(f);
+                f.clear();
+                // top face 
+                f.push_back(FFacePoint(4,0,4));
+                f.push_back(FFacePoint(5,0,5));
+                f.push_back(FFacePoint(6,0,6));
+                f.push_back(FFacePoint(7,0,7));
+                meshOut->value.add_face(f);
+                f.clear();
+                // bottom face 
+                f.push_back(FFacePoint(1,0,1));
+                f.push_back(FFacePoint(7,0,7));
+                f.push_back(FFacePoint(6,0,6));
+                f.push_back(FFacePoint(2,0,2));
+                meshOut->value.add_face(f);
+                f.clear();
+                // left face 
+                f.push_back(FFacePoint(6,0,6));
+                f.push_back(FFacePoint(5,0,5));
+                f.push_back(FFacePoint(3,0,3));
+                f.push_back(FFacePoint(2,0,2));
+                meshOut->value.add_face(f);
+                f.clear();
+                // right face 
+                f.push_back(FFacePoint(1,0,1));
+                f.push_back(FFacePoint(0,0,0));
+                f.push_back(FFacePoint(4,0,4));
+                f.push_back(FFacePoint(7,0,7));
+                meshOut->value.add_face(f);
+                f.clear();
             }
 
             subX->update = false;
             subY->update = false;
             subZ->update = false;
         }
+
+        meshOut->value.build_iarray();
+        // testing split
+        meshOut->value.split_face(2,5,7);
+
         return status();
     };
 
