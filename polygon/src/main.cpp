@@ -129,7 +129,7 @@ namespace feather
 
                 glPolygonMode(GL_FRONT, GL_FILL);
                 glPolygonMode(GL_BACK, GL_LINE);
-                glDrawElements(GL_QUADS, tf->value.i.size(), GL_UNSIGNED_INT, &tf->value.i[0]);
+                glDrawElements(GL_TRIANGLES, tf->value.i.size(), GL_UNSIGNED_INT, &tf->value.i[0]);
 
                 color.setRgb(0,0,0);
                 info.program->setAttributeValue(node.glShaderDiffuse, color);
