@@ -135,7 +135,7 @@ namespace feather
                 info.program->setAttributeValue(node.glShaderDiffuse, color);
                 glLineWidth(4.5);
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                glDrawElements(GL_QUADS, tf->value.i.size(), GL_UNSIGNED_INT, &tf->value.i[0]);
+                glDrawElements(GL_TRIANGLES, tf->value.i.size(), GL_UNSIGNED_INT, &tf->value.i[0]);
 
                 info.program->disableAttributeArray(node.glVertex);
                 info.program->disableAttributeArray(node.glNormal);
