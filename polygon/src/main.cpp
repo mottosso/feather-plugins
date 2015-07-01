@@ -85,6 +85,7 @@ namespace feather
         info.program->link();
 
         node.glVertex = info.program->attributeLocation("vertex");
+        node.glColor = info.program->attributeLocation("color");
         node.glMatrix = info.program->uniformLocation("matrix");
         node.glNormal = info.program->attributeLocation("normal");
         node.glLightPosition = info.program->attributeLocation("lightposition");
@@ -118,26 +119,32 @@ namespace feather
 
                 info.program->setUniformValue(node.glMatrix, *info.view);
                 info.program->enableAttributeArray(node.glVertex);
+                info.program->enableAttributeArray(node.glColor);
                 info.program->enableAttributeArray(node.glNormal);
                 info.program->setAttributeArray(node.glVertex, GL_FLOAT, &tf->value.v[0], 3);
+                info.program->setAttributeArray(node.glColor, GL_UNSIGNED_INT, &tf->value.c[0], 3);
                 info.program->setAttributeArray(node.glNormal, GL_FLOAT, &tf->value.vn[0],3);
 
+                /*
                 QColor color;
 
                 color.setRgb(0,0,100);
                 info.program->setAttributeValue(node.glShaderDiffuse, color);
-
+                */
+                //info.program->setAttributeValue(node.glColor, color);
+ 
                 glPolygonMode(GL_FRONT, GL_FILL);
                 glPolygonMode(GL_BACK, GL_LINE);
                 glDrawElements(GL_TRIANGLES, tf->value.i.size(), GL_UNSIGNED_INT, &tf->value.i[0]);
 
-                color.setRgb(0,0,0);
-                info.program->setAttributeValue(node.glShaderDiffuse, color);
+                //color.setRgb(0,0,0);
+                //info.program->setAttributeValue(node.glShaderDiffuse, color);
                 glLineWidth(4.5);
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
                 glDrawElements(GL_TRIANGLES, tf->value.i.size(), GL_UNSIGNED_INT, &tf->value.i[0]);
 
                 info.program->disableAttributeArray(node.glVertex);
+                info.program->disableAttributeArray(node.glColor);
                 info.program->disableAttributeArray(node.glNormal);
                 info.program->release();
             }
@@ -301,7 +308,7 @@ namespace feather
             subZ->update = false;
         }
 
-        meshOut->value.build_iarray();
+        meshOut->value.build_gl();
         // testing split
         meshOut->value.split_face(2,5,7);
 
