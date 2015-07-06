@@ -88,6 +88,7 @@ namespace feather
         node.glColor = info.program->attributeLocation("color");
         node.glMatrix = info.program->uniformLocation("matrix");
         node.glNormal = info.program->attributeLocation("normal");
+        node.glView = info.program->uniformLocation("modelview");
         node.glLightPosition = info.program->attributeLocation("lightposition");
         node.glShaderDiffuse = info.program->attributeLocation("shader_diffuse");
     }; 
@@ -104,25 +105,34 @@ namespace feather
             tf = static_cast<targetdata>(scenegraph::get_fieldBase(f->puid,f->pn,f->pf));
         }
 
-        
+        //int glAmbient = info.program->uniformLocation("Ambient");
+        //info.program->setUniformValue(glAmbient,QColor(1.0,1.0,1.0));
+        //int glLightColor = info.program->uniformLocation("LightColor");
+        //info.program->setUniformValue(glLightColor,QColor(1.0,0.0,0.0));
+        //int glLightDirection = info.program->uniformLocation("LightDirection");
+        //info.program->setUniformValue(glLightDirection,QVertex3D(1.0,0.0,0.0));
+
         if(tf!=NULL)
         { 
             if(tf->value.v.size() >= 4)
             {
                 QVector3D lpos;
-                lpos.setX(4);
-                lpos.setY(20);
-                lpos.setZ(10);
+                lpos.setX(0);
+                lpos.setY(10);
+                lpos.setZ(0);
  
                 info.program->bind();
                 info.program->setAttributeValue(node.glLightPosition, lpos);
 
                 info.program->setUniformValue(node.glMatrix, *info.view);
+
+
+
                 info.program->enableAttributeArray(node.glVertex);
                 info.program->enableAttributeArray(node.glColor);
                 info.program->enableAttributeArray(node.glNormal);
                 info.program->setAttributeArray(node.glVertex, GL_FLOAT, &tf->value.v[0], 3);
-                info.program->setAttributeArray(node.glColor, GL_FLOAT, &tf->value.c[0], 4);
+                info.program->setAttributeArray(node.glColor, GL_FLOAT, &tf->value.glc[0], 4);
                 info.program->setAttributeArray(node.glNormal, GL_FLOAT, &tf->value.vn[0],3);
 
                 /*
@@ -132,16 +142,21 @@ namespace feather
                 info.program->setAttributeValue(node.glShaderDiffuse, color);
                 */
                 //info.program->setAttributeValue(node.glColor, color);
+                uint glView=0;
+                info.program->setUniformValue(node.glView, glView);
  
                 glPolygonMode(GL_FRONT, GL_FILL);
                 glPolygonMode(GL_BACK, GL_LINE);
-                glDrawElements(GL_TRIANGLES, tf->value.i.size(), GL_UNSIGNED_INT, &tf->value.i[0]);
+                glDrawElements(GL_TRIANGLES, tf->value.gli.size(), GL_UNSIGNED_INT, &tf->value.gli[0]);
 
                 //color.setRgb(0,0,0);
                 //info.program->setAttributeValue(node.glShaderDiffuse, color);
-                glLineWidth(4.5);
+                glLineWidth(4.0);
+                glView=1;
+                info.program->setUniformValue(node.glView, glView);
+
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                glDrawElements(GL_TRIANGLES, tf->value.i.size(), GL_UNSIGNED_INT, &tf->value.i[0]);
+                glDrawElements(GL_TRIANGLES, tf->value.gli.size(), GL_UNSIGNED_INT, &tf->value.gli[0]);
 
                 info.program->disableAttributeArray(node.glVertex);
                 info.program->disableAttributeArray(node.glColor);
@@ -213,7 +228,9 @@ namespace feather
             // clear the mesh
             meshOut->value.v.clear();
             meshOut->value.vn.clear();
-            meshOut->value.i.clear();
+            meshOut->value.glv.clear();
+            meshOut->value.glvn.clear();
+            meshOut->value.gli.clear();
 
 
             // there are 3 side, each will be subdiv by it's sub axis value
@@ -248,15 +265,28 @@ namespace feather
 
                 // NORMALS
                 // Front
-                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
-                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
-                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
-                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
+                /*
+                meshOut->value.vn.push_back(FVertex3D(1.0,1.0,1.0));
+                meshOut->value.vn.push_back(FVertex3D(1.0,-1.0,1.0));
+                meshOut->value.vn.push_back(FVertex3D(-1.0,-1.0,1.0));
+                meshOut->value.vn.push_back(FVertex3D(-1.0,1.0,1.0));
                 // Back 
-                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
-                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
-                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
-                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
+                meshOut->value.vn.push_back(FVertex3D(1.0,1.0,-1.0));
+                meshOut->value.vn.push_back(FVertex3D(-1.0,1.0,-1.0));
+                meshOut->value.vn.push_back(FVertex3D(-1.0,-1.0,-1.0));
+                meshOut->value.vn.push_back(FVertex3D(1.0,-1.0,-1.0));
+                */
+                // Front
+                meshOut->value.vn.push_back(FVertex3D(0.33,0.33,0.33));
+                meshOut->value.vn.push_back(FVertex3D(0.33,-0.33,0.33));
+                meshOut->value.vn.push_back(FVertex3D(-0.33,-0.33,0.33));
+                meshOut->value.vn.push_back(FVertex3D(-0.33,0.33,0.33));
+                // Back 
+                meshOut->value.vn.push_back(FVertex3D(0.33,0.33,-0.33));
+                meshOut->value.vn.push_back(FVertex3D(-0.33,0.33,-0.33));
+                meshOut->value.vn.push_back(FVertex3D(-0.33,-0.33,-0.33));
+                meshOut->value.vn.push_back(FVertex3D(0.33,-0.33,-0.33));
+ 
 
                 FFace f;           
                 // front face 
@@ -274,10 +304,10 @@ namespace feather
                 meshOut->value.add_face(f);
                 f.clear();
                 // top face 
-                f.push_back(FFacePoint(4,0,4));
+                f.push_back(FFacePoint(0,0,0));
+                f.push_back(FFacePoint(3,0,3));
                 f.push_back(FFacePoint(5,0,5));
-                f.push_back(FFacePoint(6,0,6));
-                f.push_back(FFacePoint(7,0,7));
+                f.push_back(FFacePoint(4,0,4));
                 meshOut->value.add_face(f);
                 f.clear();
                 // bottom face 
