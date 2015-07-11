@@ -28,6 +28,7 @@
 #include <feather/parameter.hpp>
 #include <feather/command.hpp>
 #include <feather/scenegraph.hpp>
+#include <feather/gl.hpp>
 #include <QColor>
 
 #ifdef __cplusplus
@@ -74,23 +75,9 @@ namespace feather
 
     GL_INIT(POLYGON_SHAPE)
     {
-        QOpenGLShader* frag = new QOpenGLShader(QOpenGLShader::Fragment);
-        frag->compileSourceFile("shaders/frag/lambert.glsl");
-        QOpenGLShader* vert = new QOpenGLShader(QOpenGLShader::Vertex);
-        vert->compileSourceFile("shaders/vert/mesh.glsl");
-
-        info.program->addShader(frag);
-        info.program->addShader(vert);
-
-        info.program->link();
-
-        node.glVertex = info.program->attributeLocation("vertex");
-        node.glColor = info.program->attributeLocation("color");
-        node.glMatrix = info.program->uniformLocation("matrix");
-        node.glNormal = info.program->attributeLocation("normal");
-        node.glView = info.program->uniformLocation("modelview");
-        node.glLightPosition = info.program->attributeLocation("lightposition");
-        node.glShaderDiffuse = info.program->attributeLocation("shader_diffuse");
+        ADD_GL_FRAG_SHADER("shaders/frag/lambert.glsl")
+        ADD_GL_VERT_SHADER("shaders/vert/mesh.glsl")
+        GL_INIT_FINISH()
     }; 
 
     GL_DRAW(POLYGON_SHAPE)
