@@ -1,4 +1,4 @@
-/***********************************************************************
+/**********************************************************************
  *
  * Filename: main.cpp
  *
@@ -107,13 +107,13 @@ namespace feather
                 lpos.setX(0);
                 lpos.setY(10);
                 lpos.setZ(0);
- 
+
+                // future macro that will handle drawing mesh types
+                //GL_DRAW_MESH(tf)
+                
                 info.program->bind();
                 info.program->setAttributeValue(node.glLightPosition, lpos);
-
                 info.program->setUniformValue(node.glMatrix, *info.view);
-
-
 
                 info.program->enableAttributeArray(node.glVertex);
                 info.program->enableAttributeArray(node.glColor);
@@ -143,7 +143,13 @@ namespace feather
                 info.program->setUniformValue(node.glView, glView);
 
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                glDrawElements(GL_TRIANGLES, tf->value.gli.size(), GL_UNSIGNED_INT, &tf->value.gli[0]);
+                //glDrawElements(GL_TRIANGLES, tf->value.gli.size(), GL_UNSIGNED_INT, &tf->value.gli[0]);
+                // draw face edges
+                uint istep=0;
+                for_each(tf->value.f.begin(), tf->value.f.end(), [tf,&istep](FFace _f){
+                    glDrawElements(GL_LINE_LOOP, _f.size(), GL_UNSIGNED_INT, &tf->value.glei[istep]);
+                    istep = istep + _f.size();
+                });
 
                 info.program->disableAttributeArray(node.glVertex);
                 info.program->disableAttributeArray(node.glColor);

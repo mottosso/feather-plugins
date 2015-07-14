@@ -1,8 +1,12 @@
 PROJECT(feather_polygon)
 
+FIND_PACKAGE(OpenGL REQUIRED)
+
 SET(feather_polygon_SRCS
     main.cpp
 )
+
+ADD_DEFINITIONS("-D GL_GLEXT_PROTOTYPES")
 
 ADD_LIBRARY(feather_polygon SHARED ${feather_polygon_SRCS})
 
