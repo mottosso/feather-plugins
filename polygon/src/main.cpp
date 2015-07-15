@@ -132,8 +132,8 @@ namespace feather
                 uint glView=0;
                 info.program->setUniformValue(node.glView, glView);
  
-                glPolygonMode(GL_FRONT, GL_FILL);
-                glPolygonMode(GL_BACK, GL_LINE);
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                //glPolygonMode(GL_BACK, GL_LINE);
                 glDrawElements(GL_TRIANGLES, tf->value.gli.size(), GL_UNSIGNED_INT, &tf->value.gli[0]);
 
                 //color.setRgb(0,0,0);
@@ -333,7 +333,7 @@ namespace feather
 
         meshOut->value.build_gl();
         // testing split
-        meshOut->value.split_face(2,5,7);
+        //meshOut->value.split_face(2,5,7);
 
         return status();
     };
