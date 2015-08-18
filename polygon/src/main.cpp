@@ -77,6 +77,7 @@ namespace feather
     {
         ADD_GL_FRAG_SHADER("shaders/frag/lambert.glsl")
         ADD_GL_VERT_SHADER("shaders/vert/mesh.glsl")
+        //ADD_GL_GEOM_SHADER("shaders/geom/wireframe.glsl")
         GL_INIT_FINISH()
     }; 
 

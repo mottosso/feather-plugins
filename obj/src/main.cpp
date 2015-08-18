@@ -55,6 +55,7 @@ namespace feather
         enum Command { N=0, IMPORT_OBJ, EXPORT_OBJ };
 
         status import_obj(parameter::ParameterList params) {
+            std::cout << "import obj\n";
             std::string filename;
             bool selection=false;
             bool p=false;

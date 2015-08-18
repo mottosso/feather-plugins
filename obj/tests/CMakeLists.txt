@@ -1,0 +1,7 @@
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+# INSTALL
+
+FILE(GLOB OBJ_FILES "*.obj")
+
+INSTALL(FILES ${OBJ_FILES} DESTINATION /usr/local/feather/tests)
