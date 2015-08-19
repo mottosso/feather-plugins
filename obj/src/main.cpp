@@ -55,11 +55,11 @@ namespace feather
         enum Command { N=0, IMPORT_OBJ, EXPORT_OBJ };
 
         status import_obj(parameter::ParameterList params) {
-            std::cout << "import obj\n";
             std::string filename;
             bool selection=false;
             bool p=false;
             p = params.getParameterValue<std::string>("filename",filename);
+            std::cout << "import obj [" << filename << "]\n";
             if(!p)
                 return status(FAILED,"filename parameter failed");
             p = params.getParameterValue<bool>("selection",selection);
