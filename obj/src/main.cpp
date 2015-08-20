@@ -59,7 +59,6 @@ namespace feather
             bool selection=false;
             bool p=false;
             p = params.getParameterValue<std::string>("filename",filename);
-            std::cout << "import obj [" << filename << "]\n";
             if(!p)
                 return status(FAILED,"filename parameter failed");
             p = params.getParameterValue<bool>("selection",selection);
