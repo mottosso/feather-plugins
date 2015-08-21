@@ -155,6 +155,7 @@ feather::status io::file<io::IMPORT,io::OBJ>(obj_data_t& data, std::string filen
 
     // add std::ios::binary flag to read binary data
     std::ifstream fs(filename.c_str(), std::ios::in|std::ios::ate);
+    //std::ifstream fs(filename.c_str());
     long size;
     char* buffer;
     std::string input;
@@ -232,7 +233,7 @@ feather::status io::file<io::IMPORT,io::OBJ>(obj_data_t& data, std::string filen
         std::cout << "error loading \"" << filename << "\" obj file\n";
         return feather::status(feather::FAILED,"loading error");
     }
-        
+
     std::cout << "parsing error in \"" << filename << "\" obj file\n";
 
     return feather::status(feather::FAILED,"parsing error");

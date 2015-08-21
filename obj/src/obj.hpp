@@ -150,8 +150,6 @@ namespace obj
 
     namespace io
     {
-        const char* data_path = "./data/";
-
         enum FileType { Mesh, Shader, Group, Texture, Light, Camera, Global };
         enum Action { IMPORT, EXPORT };
         enum Format { OBJ };
@@ -230,18 +228,18 @@ namespace obj
                     vt %= lit("vt") >> double_ >> double_ ;
                     vn %= lit("vn") >> double_ >> double_ >> double_ ;
                     facepoint %= int_ >> '/' >> -int_ >> '/' >> int_;
-                    o %= 'o' > lexeme[+(char_ - qi::eol)] ;
-                    mtllib %= lit("mtllib") > lexeme[+(char_ - qi::eol)] ;
-                    usemtl %= lit("usemtl") > lexeme[+(char_ - qi::eol)] ;
-                    s %= 's' > int_ ;
-                    f %= 'f' > *facepoint ;
-                    sgrp %= s > *f ;
-                    grp %= usemtl > *sgrp ;
-                    g %= 'g' > lexeme[+(char_ - qi::eol)];
+                    o %= 'o' >> lexeme[+(char_ - qi::eol)] ;
+                    mtllib %= lit("mtllib") >> lexeme[+(char_ - qi::eol)] ;
+                    usemtl %= lit("usemtl") >> lexeme[+(char_ - qi::eol)] ;
+                    s %= 's' >> int_ ;
+                    f %= 'f' >> *facepoint ;
+                    sgrp %= s >> *f ;
+                    grp %= usemtl >> *sgrp ;
+                    g %= 'g' >> lexeme[+(char_ - qi::eol)];
                     // notice the '>' instead of '>>', this is for enables error backtracing
-                    mesh %= *v > -(*vt) > *vn;
-                    object %= o > mesh > g > *grp;
-                    data %= -(*mtllib) > *object;
+                    mesh %= *v >> -(*vt) >> *vn;
+                    object %= o >> mesh >> g >> *grp;
+                    data %= -(*mtllib) >> *object;
 
                     // names for rule errors
                     v.name("v");

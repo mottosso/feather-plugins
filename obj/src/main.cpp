@@ -27,7 +27,7 @@
 #include <feather/node.hpp>
 #include <feather/parameter.hpp>
 #include <feather/command.hpp>
-
+#include "obj.hpp"
 
 #ifdef __cplusplus
 extern "C" {
@@ -64,8 +64,17 @@ namespace feather
             p = params.getParameterValue<bool>("selection",selection);
             if(!p)
                 return status(FAILED,"selection parameter failed");
- 
-            return status();
+
+            // load the mesh
+            //mesh_t mesh;
+            //p = obj::io::load_mesh(mesh,filename);
+            //if(!p)
+            //    return status(FAILED,"obj file failed to parse");
+
+            //return status();
+            obj_data_t data;
+            feather::status s = obj::io::file<obj::io::IMPORT,obj::io::OBJ>(data,filename);
+            return s;
         };
 
         status export_obj(parameter::ParameterList params) {
