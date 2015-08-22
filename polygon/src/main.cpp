@@ -119,9 +119,9 @@ namespace feather
                 info.program->enableAttributeArray(node.glVertex);
                 info.program->enableAttributeArray(node.glColor);
                 info.program->enableAttributeArray(node.glNormal);
-                info.program->setAttributeArray(node.glVertex, GL_FLOAT, &tf->value.v[0], 3);
+                info.program->setAttributeArray(node.glVertex, GL_DOUBLE, &tf->value.v[0], 3);
                 info.program->setAttributeArray(node.glColor, GL_FLOAT, &tf->value.glc[0], 4);
-                info.program->setAttributeArray(node.glNormal, GL_FLOAT, &tf->value.vn[0],3);
+                info.program->setAttributeArray(node.glNormal, GL_DOUBLE, &tf->value.vn[0],3);
 
                 /*
                 QColor color;

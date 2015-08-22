@@ -65,8 +65,8 @@ bool io::write_mesh(obj_data_t& data)
 
         file.write(ss.str().c_str(),ss.tellp());
 
-        for(vertex_t v : object.mesh.v)
-            file.write((char*)&v, sizeof(vertex_t));
+        for(feather::FVertex3D v : object.mesh.v)
+            file.write((char*)&v, sizeof(feather::FVertex3D));
 
         for(st_t st : object.mesh.st)
             file.write((char*)&st, sizeof(st_t));
@@ -124,7 +124,7 @@ bool io::write_obj(std::string filename, obj_data_t& data)
         ss << "# " << obj.mesh.v.size() << " vertics\n";
 
         // print vertexs
-        for(vertex_t v : obj.mesh.v)
+        for(feather::FVertex3D v : obj.mesh.v)
             ss << "v " << v.x << " " << v.y << " " << v.z << std::endl;
 
         // print tex coords
@@ -155,7 +155,6 @@ feather::status io::file<io::IMPORT,io::OBJ>(obj_data_t& data, std::string filen
 
     // add std::ios::binary flag to read binary data
     std::ifstream fs(filename.c_str(), std::ios::in|std::ios::ate);
-    //std::ifstream fs(filename.c_str());
     long size;
     char* buffer;
     std::string input;
@@ -181,8 +180,16 @@ feather::status io::file<io::IMPORT,io::OBJ>(obj_data_t& data, std::string filen
 
         if(r && iter == end)
         {
+            std::cout << "mesh size:\n"
+                << "\tv size: " << data.object.at(0).mesh.v.size()
+                << "\tv size: " << data.object.at(0).mesh.st.size()
+                << "\tv size: " << data.object.at(0).mesh.vn.size()
+                << "\tf size: " << data.object.at(0).grp.at(0).sg.at(0).f.size()
+                << std::endl;
+  
             // we need to fix the vertex indices in the faces since they are numbered different in the file then what we'll be using them in the object class
 
+            /*
             std::cout << "fixing face indices\n";
 
             int v_count = 1;
@@ -219,6 +226,7 @@ feather::status io::file<io::IMPORT,io::OBJ>(obj_data_t& data, std::string filen
             }
  
             std::cout << "finished fixing face indices\n";
+            */
 
             return feather::status();        
         }

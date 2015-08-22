@@ -30,7 +30,7 @@
 
 //using namespace feather;
 
-typedef struct{double x; double y; double z;} vertex_t;
+//typedef struct{double x; double y; double z;} vertex_t;
 typedef struct{double x; double y; double z;} normal_t;
 typedef struct{double s; double t;} st_t;
 typedef struct{int v; int vt; int vn;} face_point_t;
@@ -49,7 +49,7 @@ typedef struct {
 } group_t;
 
 typedef struct{
-    std::vector<vertex_t> v;
+    feather::FVertex3DArray v;
     std::vector<st_t> st;
     std::vector<normal_t> vn;
 } mesh_t;
@@ -71,7 +71,7 @@ typedef struct {
 
 // vertex point
 BOOST_FUSION_ADAPT_STRUCT(
-        vertex_t,
+        feather::FVertex3D,
         (double, x)
         (double, y)
         (double, z)
@@ -123,7 +123,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 // mesh
 BOOST_FUSION_ADAPT_STRUCT(
         mesh_t,
-        (std::vector<vertex_t>, v)
+        (feather::FVertex3DArray, v)
         (std::vector<st_t>, st)
         (std::vector<normal_t>, vn)
         )
@@ -274,7 +274,7 @@ namespace obj
 
                 qi::rule<Iterator, obj_data_t(), Skipper> data;
                 qi::rule<Iterator, std::string(), Skipper> o;
-                qi::rule<Iterator, vertex_t(), Skipper> v;
+                qi::rule<Iterator, feather::FVertex3D(), Skipper> v;
                 qi::rule<Iterator, st_t(), Skipper> vt;
                 qi::rule<Iterator, normal_t(), Skipper> vn;
                 qi::rule<Iterator, face_point_t(), Skipper> facepoint;
