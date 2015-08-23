@@ -28,19 +28,11 @@
 #include <feather/deps.hpp>
 #include <feather/status.hpp>
 
-//using namespace feather;
-
-//typedef struct{double x; double y; double z;} vertex_t;
-typedef struct{double x; double y; double z;} normal_t;
-typedef struct{double s; double t;} st_t;
-typedef struct{int v; int vt; int vn;} face_point_t;
-typedef struct{std::vector<face_point_t> f; } face_t;
-
 // Mesh Components
 
 typedef struct {
     int s;
-    std::vector<face_t> f;
+    std::vector<feather::FFace> f;
 } smoothing_group_t;
 
 typedef struct {
@@ -50,8 +42,8 @@ typedef struct {
 
 typedef struct{
     feather::FVertex3DArray v;
-    std::vector<st_t> st;
-    std::vector<normal_t> vn;
+    feather::FTextureCoordArray st;
+    feather::FNormal3DArray vn;
 } mesh_t;
 
 typedef struct {
@@ -79,14 +71,14 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 // texture point
 BOOST_FUSION_ADAPT_STRUCT(
-        st_t,
+        feather::FTextureCoord,
         (double, s)
         (double, t)
         )
 
 // normal point
 BOOST_FUSION_ADAPT_STRUCT(
-        normal_t,
+        feather::FNormal3D,
         (double, x)
         (double, y)
         (double, z)
@@ -94,23 +86,17 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 // face point
 BOOST_FUSION_ADAPT_STRUCT(
-        face_point_t,
-        (int, v)
-        (int, vt)
-        (int, vn)
-        )
-
-// face
-BOOST_FUSION_ADAPT_STRUCT(
-        face_t,
-        (std::vector<face_point_t>, f)
+        feather::FFacePoint,
+        (feather::FUInt, v)
+        (feather::FUInt, vt)
+        (feather::FUInt, vn)
         )
 
 // smoothing group
 BOOST_FUSION_ADAPT_STRUCT(
         smoothing_group_t,
         (int, s)
-        (std::vector<face_t>, f)
+        (std::vector<feather::FFace>, f)
         )
 
 // group
@@ -124,8 +110,8 @@ BOOST_FUSION_ADAPT_STRUCT(
 BOOST_FUSION_ADAPT_STRUCT(
         mesh_t,
         (feather::FVertex3DArray, v)
-        (std::vector<st_t>, st)
-        (std::vector<normal_t>, vn)
+        (feather::FTextureCoordArray, st)
+        (feather::FNormal3DArray, vn)
         )
 
 // object
@@ -214,6 +200,7 @@ namespace obj
                     using qi::on_error;
                     using qi::fail;
                     using qi::int_;
+                    using qi::uint_;
                     using qi::double_;
                     //using qi::eol;
                     using ascii::char_;
@@ -227,7 +214,7 @@ namespace obj
                     v %= 'v' >> double_ >> double_ >> double_ ;
                     vt %= lit("vt") >> double_ >> double_ ;
                     vn %= lit("vn") >> double_ >> double_ >> double_ ;
-                    facepoint %= int_ >> '/' >> -int_ >> '/' >> int_;
+                    facepoint %= uint_ >> '/' >> -uint_ >> '/' >> uint_;
                     o %= 'o' >> lexeme[+(char_ - qi::eol)] ;
                     mtllib %= lit("mtllib") >> lexeme[+(char_ - qi::eol)] ;
                     usemtl %= lit("usemtl") >> lexeme[+(char_ - qi::eol)] ;
@@ -275,14 +262,14 @@ namespace obj
                 qi::rule<Iterator, obj_data_t(), Skipper> data;
                 qi::rule<Iterator, std::string(), Skipper> o;
                 qi::rule<Iterator, feather::FVertex3D(), Skipper> v;
-                qi::rule<Iterator, st_t(), Skipper> vt;
-                qi::rule<Iterator, normal_t(), Skipper> vn;
-                qi::rule<Iterator, face_point_t(), Skipper> facepoint;
+                qi::rule<Iterator, feather::FTextureCoord(), Skipper> vt;
+                qi::rule<Iterator, feather::FNormal3D(), Skipper> vn;
+                qi::rule<Iterator, feather::FFacePoint(), Skipper> facepoint;
                 qi::rule<Iterator, std::string(), Skipper> g;
                 qi::rule<Iterator, std::string(), Skipper> usemtl;
                 qi::rule<Iterator, std::string(), Skipper> mtllib;
                 qi::rule<Iterator, int(), Skipper> s;
-                qi::rule<Iterator, face_t(), Skipper> f;
+                qi::rule<Iterator, feather::FFace(), Skipper> f;
                 qi::rule<Iterator, smoothing_group_t(), Skipper> sgrp;
                 qi::rule<Iterator, group_t(), Skipper> grp;
                 qi::rule<Iterator, mesh_t(), Skipper> mesh;

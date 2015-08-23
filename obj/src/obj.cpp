@@ -68,11 +68,11 @@ bool io::write_mesh(obj_data_t& data)
         for(feather::FVertex3D v : object.mesh.v)
             file.write((char*)&v, sizeof(feather::FVertex3D));
 
-        for(st_t st : object.mesh.st)
-            file.write((char*)&st, sizeof(st_t));
+        for(feather::FTextureCoord st : object.mesh.st)
+            file.write((char*)&st, sizeof(feather::FTextureCoord));
 
-        for(normal_t vn : object.mesh.vn)
-            file.write((char*)&vn, sizeof(normal_t));
+        for(feather::FNormal3D vn : object.mesh.vn)
+            file.write((char*)&vn, sizeof(feather::FNormal3D));
 
         /*
         for(group_t group : object.grp)
@@ -80,11 +80,12 @@ bool io::write_mesh(obj_data_t& data)
                 for(face_point_t fp : f)
                     file.write((char*)&fp, sizeof(face_point_t));
         */
+        
         for(group_t group : object.grp)
             for(smoothing_group_t sg : group.sg)
-                for(face_t f : sg.f)
-                    for(face_point_t fp : f.f)
-                        file.write((char*)&fp, sizeof(face_point_t));
+                for(feather::FFace f : sg.f)
+                    for(feather::FFacePoint fp : f)
+                        file.write((char*)&fp, sizeof(feather::FFacePoint));
 
         ss.seekp(0);
         ss.clear();
@@ -128,11 +129,11 @@ bool io::write_obj(std::string filename, obj_data_t& data)
             ss << "v " << v.x << " " << v.y << " " << v.z << std::endl;
 
         // print tex coords
-        for(st_t vt : obj.mesh.st)
+        for(feather::FTextureCoord vt : obj.mesh.st)
             ss << "vt " << vt.s << " " << vt.t << std::endl;
 
         // print normals
-        for(normal_t vn : obj.mesh.vn)
+        for(feather::FNormal3D vn : obj.mesh.vn)
             ss << "vn " << vn.x << " " << vn.y << " " << vn.z << std::endl;
 
     }
