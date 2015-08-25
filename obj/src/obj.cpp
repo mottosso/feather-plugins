@@ -71,8 +71,8 @@ bool io::write_mesh(obj_data_t& data)
         for(feather::FTextureCoord st : object.mesh.st)
             file.write((char*)&st, sizeof(feather::FTextureCoord));
 
-        for(feather::FNormal3D vn : object.mesh.vn)
-            file.write((char*)&vn, sizeof(feather::FNormal3D));
+        for(feather::FVertex3D vn : object.mesh.vn)
+            file.write((char*)&vn, sizeof(feather::FVertex3D));
 
         /*
         for(group_t group : object.grp)
@@ -133,7 +133,7 @@ bool io::write_obj(std::string filename, obj_data_t& data)
             ss << "vt " << vt.s << " " << vt.t << std::endl;
 
         // print normals
-        for(feather::FNormal3D vn : obj.mesh.vn)
+        for(feather::FVertex3D vn : obj.mesh.vn)
             ss << "vn " << vn.x << " " << vn.y << " " << vn.z << std::endl;
 
     }
@@ -181,12 +181,11 @@ feather::status io::file<io::IMPORT,io::OBJ>(obj_data_t& data, std::string filen
 
         if(r && iter == end)
         {
-            std::cout << "mesh size:\n"
-                << "\tv size: " << data.object.at(0).mesh.v.size()
-                << "\tv size: " << data.object.at(0).mesh.st.size()
-                << "\tv size: " << data.object.at(0).mesh.vn.size()
-                << "\tf size: " << data.object.at(0).grp.at(0).sg.at(0).f.size()
-                << std::endl;
+            std::cout << "mesh parsed\n"
+                << "\tv size: " << data.object.at(0).mesh.v.size() << std::endl
+                << "\tv size: " << data.object.at(0).mesh.st.size() << std::endl
+                << "\tv size: " << data.object.at(0).mesh.vn.size() << std::endl
+                << "\tf size: " << data.object.at(0).grp.at(0).sg.at(0).f.size() << std::endl;
   
             // we need to fix the vertex indices in the faces since they are numbered different in the file then what we'll be using them in the object class
 

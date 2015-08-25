@@ -43,7 +43,7 @@ typedef struct {
 typedef struct{
     feather::FVertex3DArray v;
     feather::FTextureCoordArray st;
-    feather::FNormal3DArray vn;
+    feather::FVertex3DArray vn;
 } mesh_t;
 
 typedef struct {
@@ -76,14 +76,6 @@ BOOST_FUSION_ADAPT_STRUCT(
         (double, t)
         )
 
-// normal point
-BOOST_FUSION_ADAPT_STRUCT(
-        feather::FNormal3D,
-        (double, x)
-        (double, y)
-        (double, z)
-        )
-
 // face point
 BOOST_FUSION_ADAPT_STRUCT(
         feather::FFacePoint,
@@ -111,7 +103,7 @@ BOOST_FUSION_ADAPT_STRUCT(
         mesh_t,
         (feather::FVertex3DArray, v)
         (feather::FTextureCoordArray, st)
-        (feather::FNormal3DArray, vn)
+        (feather::FVertex3DArray, vn)
         )
 
 // object
@@ -263,7 +255,7 @@ namespace obj
                 qi::rule<Iterator, std::string(), Skipper> o;
                 qi::rule<Iterator, feather::FVertex3D(), Skipper> v;
                 qi::rule<Iterator, feather::FTextureCoord(), Skipper> vt;
-                qi::rule<Iterator, feather::FNormal3D(), Skipper> vn;
+                qi::rule<Iterator, feather::FVertex3D(), Skipper> vn;
                 qi::rule<Iterator, feather::FFacePoint(), Skipper> facepoint;
                 qi::rule<Iterator, std::string(), Skipper> g;
                 qi::rule<Iterator, std::string(), Skipper> usemtl;

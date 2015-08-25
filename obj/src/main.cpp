@@ -27,6 +27,8 @@
 #include <feather/node.hpp>
 #include <feather/parameter.hpp>
 #include <feather/command.hpp>
+#include <feather/scenegraph.hpp>
+
 #include "obj.hpp"
 
 #ifdef __cplusplus
@@ -74,6 +76,34 @@ namespace feather
             //return status();
             obj_data_t data;
             feather::status s = obj::io::file<obj::io::IMPORT,obj::io::OBJ>(data,filename);
+
+            // add the nodes to the scenegraph
+            int uid = feather::scenegraph::add_node(feather::node::Polygon,320,data.object.at(0).o);            
+
+            // for now I'm just going to connect the node to the root
+            feather::scenegraph::connect(0,4,uid,1);
+            //feather::scenegraph::update();
+
+            // get the mesh from the node and fill in it's values
+            typedef field::Field<feather::FMesh,field::connection::In>* sourcefield;
+            sourcefield sf=NULL;
+           
+            // NOTE: you can't call feather::sg[uid] from here - you will get a seg fault 
+            sf = static_cast<sourcefield>(feather::scenegraph::get_fieldBase(uid,320,1));
+            if(sf){
+                // only going to do the first object as a test
+                // fill in the mesh
+                sf->value.assign_v(data.object.at(0).mesh.v);
+                sf->value.assign_st(data.object.at(0).mesh.st);
+                sf->value.assign_vn(data.object.at(0).mesh.vn);
+                sf->value.assign_f(data.object.at(0).grp.at(0).sg.at(0).f);
+            }
+            else
+                std::cout << "NULL SOURCE FIELD\n";
+    
+                 
+            feather::scenegraph::update();
+
             return s;
         };
 
