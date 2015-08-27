@@ -96,11 +96,17 @@ namespace feather
                 sf->value.assign_v(data.object.at(0).mesh.v);
                 sf->value.assign_st(data.object.at(0).mesh.st);
                 sf->value.assign_vn(data.object.at(0).mesh.vn);
+                // obj v indexes are 1 based and need to be converted to 0 based
+                for_each(data.object.at(0).grp.at(0).sg.at(0).f.begin(), data.object.at(0).grp.at(0).sg.at(0).f.end(), [](feather::FFace& f){
+                    for_each(f.begin(), f.end(),[](feather::FFacePoint& fp){ fp.v=fp.v-1; fp.vn=fp.vn-1; });
+                });
                 sf->value.assign_f(data.object.at(0).grp.at(0).sg.at(0).f);
             }
             else
                 std::cout << "NULL SOURCE FIELD\n";
     
+            // build the gl mesh for the viewport
+            sf->value.build_gl();
                  
             feather::scenegraph::update();
 

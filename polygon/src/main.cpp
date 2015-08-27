@@ -148,7 +148,7 @@ namespace feather
                 // draw face edges
                 uint istep=0;
                 for_each(tf->value.f.begin(), tf->value.f.end(), [tf,&istep](FFace _f){
-                    glDrawElements(GL_LINE_LOOP, _f.size(), GL_UNSIGNED_INT, &tf->value.glei[istep]);
+                    //glDrawElements(GL_LINE_LOOP, _f.size(), GL_UNSIGNED_INT, &tf->value.glei[istep]);
                     istep = istep + _f.size();
                 });
 
