@@ -75,8 +75,8 @@ namespace feather
 
     GL_INIT(POLYGON_SHAPE)
     {
-        ADD_GL_FRAG_SHADER("shaders/frag/lambert.glsl")
         ADD_GL_VERT_SHADER("shaders/vert/mesh.glsl")
+        ADD_GL_FRAG_SHADER("shaders/frag/lambert.glsl")
         //ADD_GL_GEOM_SHADER("shaders/geom/wireframe.glsl")
         GL_INIT_FINISH()
     }; 
@@ -105,8 +105,8 @@ namespace feather
             if(tf->value.v.size() >= 4)
             {
                 QVector3D lpos;
-                lpos.setX(0);
-                lpos.setY(10);
+                lpos.setX(10);
+                lpos.setY(20);
                 lpos.setZ(0);
 
                 // future macro that will handle drawing mesh types
@@ -123,6 +123,7 @@ namespace feather
                 info.program->setAttributeArray(node.glColor, GL_FLOAT, &tf->value.glc[0], 4);
                 info.program->setAttributeArray(node.glNormal, GL_DOUBLE, &tf->value.vn[0],3);
 
+
                 /*
                 QColor color;
 
@@ -132,30 +133,42 @@ namespace feather
                 //info.program->setAttributeValue(node.glColor, color);
                 uint glView=0;
                 info.program->setUniformValue(node.glView, glView);
+
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
+    //glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE);
  
-                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                glPolygonMode(GL_FRONT, GL_FILL);
                 //glPolygonMode(GL_BACK, GL_LINE);
                 glDrawElements(GL_TRIANGLES, tf->value.gli.size(), GL_UNSIGNED_INT, &tf->value.gli[0]);
 
                 //color.setRgb(0,0,0);
                 //info.program->setAttributeValue(node.glShaderDiffuse, color);
-                glLineWidth(4.0);
+
+                glLineWidth(1.5);
                 glView=1;
                 info.program->setUniformValue(node.glView, glView);
 
-                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                glPolygonMode(GL_FRONT, GL_LINE);
+                glDrawElements(GL_TRIANGLES, tf->value.gli.size(), GL_UNSIGNED_INT, &tf->value.gli[0]);
+
+                /*
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
+                // going to try to draw the edges using a shader
+                glPolygonMode(GL_FRONT, GL_LINE);
                 //glDrawElements(GL_TRIANGLES, tf->value.gli.size(), GL_UNSIGNED_INT, &tf->value.gli[0]);
                 // draw face edges
                 uint istep=0;
                 for_each(tf->value.f.begin(), tf->value.f.end(), [tf,&istep](FFace _f){
-                    //glDrawElements(GL_LINE_LOOP, _f.size(), GL_UNSIGNED_INT, &tf->value.glei[istep]);
+                    glDrawElements(GL_LINE_LOOP, _f.size(), GL_UNSIGNED_INT, &tf->value.glei[istep]);
                     istep = istep + _f.size();
                 });
+                */
 
                 info.program->disableAttributeArray(node.glVertex);
                 info.program->disableAttributeArray(node.glColor);
                 info.program->disableAttributeArray(node.glNormal);
                 info.program->release();
+
             }
         }
 
