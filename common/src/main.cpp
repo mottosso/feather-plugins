@@ -56,10 +56,34 @@ using namespace feather;
 
 // Define all of our nodes
 // with id's here.
-#define SHAPE 5
-#define TRANSFORM 6
+#define EMPTY 1
+#define SHAPE 2
+#define TRANSFORM 3
 
-PLUGIN_INIT("Common","Commonly used nodes and commands","Richard Layman",SHAPE,TRANSFORM)
+PLUGIN_INIT("Common","Commonly used nodes and commands","Richard Layman",EMPTY,TRANSFORM)
+
+/*
+ ***************************************
+ *               NONE                  *
+ ***************************************
+*/
+
+// parent
+ADD_FIELD_TO_NODE(EMPTY,FNode,field::Node,field::connection::In,FNode(),1)
+// child
+ADD_FIELD_TO_NODE(EMPTY,FNode,field::Node,field::connection::Out,FNode(),2)
+
+
+namespace feather
+{
+    DO_IT(EMPTY)
+    { 
+        return status();
+    };
+} // namespace feather
+
+NODE_INIT(EMPTY,node::Empty,"node_empty.svg")
+
 
 /*
  ***************************************

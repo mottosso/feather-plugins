@@ -55,10 +55,14 @@ PLUGIN_INIT("Polygon","Polygon objects and tools","Richard Layman",POLYGON_SHAPE
  ***************************************
 */
 
+// parent
+ADD_FIELD_TO_NODE(POLYGON_SHAPE,FNode,field::Node,field::connection::In,FNode(),1)
+// child
+ADD_FIELD_TO_NODE(POLYGON_SHAPE,FNode,field::Node,field::connection::Out,FNode(),2)
 // meshIn
-ADD_FIELD_TO_NODE(POLYGON_SHAPE,FMesh,field::Mesh,field::connection::In,FMesh(),1)
+ADD_FIELD_TO_NODE(POLYGON_SHAPE,FMesh,field::Mesh,field::connection::In,FMesh(),3)
 // testIn
-ADD_FIELD_TO_NODE(POLYGON_SHAPE,int,field::Int,field::connection::In,10,2)
+ADD_FIELD_TO_NODE(POLYGON_SHAPE,int,field::Int,field::connection::In,10,4)
 
 namespace feather
 {
@@ -83,16 +87,12 @@ namespace feather
 
     GL_DRAW(POLYGON_SHAPE)
     {
+        // meshIn
         typedef field::Field<FMesh,field::connection::In>* fielddata;
-        fielddata f = static_cast<fielddata>(node.fields.at(1));
+        fielddata tf = static_cast<fielddata>(feather::scenegraph::get_fieldBase(node.uid,320,3));
 
-        typedef field::Field<FMesh,field::connection::Out>* targetdata;
-        targetdata tf;
-
-        if(f->connected) {
-            tf = static_cast<targetdata>(scenegraph::get_fieldBase(f->puid,f->pn,f->pf));
-        }
-
+        // you can check connection using tf->connected
+ 
         //int glAmbient = info.program->uniformLocation("Ambient");
         //info.program->setUniformValue(glAmbient,QColor(1.0,1.0,1.0));
         //int glLightColor = info.program->uniformLocation("LightColor");
@@ -102,6 +102,7 @@ namespace feather
 
         if(tf!=NULL)
         { 
+
             if(tf->value.v.size() >= 4)
             {
                 QVector3D lpos;
@@ -123,6 +124,15 @@ namespace feather
                 info.program->setAttributeArray(node.glColor, GL_FLOAT, &tf->value.glc[0], 4);
                 info.program->setAttributeArray(node.glNormal, GL_DOUBLE, &tf->value.vn[0],3);
 
+                /*
+                std::cout << "draw count for " << node.uid
+                    << "\n\tv=" << tf->value.v.size()
+                    << "\n\tglc=" << tf->value.glc.size()
+                    << "\n\tvn=" << tf->value.vn.size()
+                    << "\n\tgli=" << tf->value.gli.size()
+                    << "\n\tf=" << tf->value.f.size()
+                    << std::endl;
+                */
 
                 /*
                 QColor color;
@@ -136,7 +146,8 @@ namespace feather
 
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
     //glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE);
- 
+
+                // SHADED MODEL 
                 glPolygonMode(GL_FRONT, GL_FILL);
                 //glPolygonMode(GL_BACK, GL_LINE);
                 glDrawElements(GL_TRIANGLES, tf->value.gli.size(), GL_UNSIGNED_INT, &tf->value.gli[0]);
@@ -144,12 +155,15 @@ namespace feather
                 //color.setRgb(0,0,0);
                 //info.program->setAttributeValue(node.glShaderDiffuse, color);
 
+                // WIREFRAME MODEL
+                /*
                 glLineWidth(1.5);
                 glView=1;
                 info.program->setUniformValue(node.glView, glView);
 
                 glPolygonMode(GL_FRONT, GL_LINE);
                 glDrawElements(GL_TRIANGLES, tf->value.gli.size(), GL_UNSIGNED_INT, &tf->value.gli[0]);
+                */
 
                 /*
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
@@ -208,7 +222,6 @@ NODE_INIT(POLYGON_PLANE,node::Polygon,"")
  *            POLYGON CUBE             *
  ***************************************
 */
-
 ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,0,1)
 ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,0,2)
 ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,0,3)
@@ -240,13 +253,16 @@ namespace feather
             meshOut->value.gli.clear();
 
 
+            // COMMENTED THIS OUT FOR THE TIME BEING TO GET RID OF WARNINGS
             // there are 3 side, each will be subdiv by it's sub axis value
             // the front and back of each axis are created
+            /*
             int side = 0;
             float maxV = 1.0;
             float minV = -1.0;
             float spanX = 2.0;
             float spanY = 2.0;
+            */
 
             /* 
             while(side < 3) {
