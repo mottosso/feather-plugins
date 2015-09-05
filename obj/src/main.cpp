@@ -87,9 +87,12 @@ namespace feather
                     // add the nodes to the scenegraph
                     uid = feather::scenegraph::add_node(feather::node::Polygon,320,objdata.o);            
                     std::cout << "mesh uid:" << uid << std::endl;
-                    // for now I'm just going to connect the node to the root
-                    feather::scenegraph::connect(0,2,uid,1);
-                    //feather::scenegraph::update();
+                    // for now I'm just going to connect the root to the node 
+                    feather::status p = feather::scenegraph::connect(0,2,uid,1);
+                    if(p.state==feather::FAILED)
+                        std::cout << p.msg << std::endl;
+
+                    feather::scenegraph::update();
 
                     // get the mesh from the node and fill in it's values
                     typedef field::Field<feather::FMesh,field::connection::In>* sourcefield;
@@ -124,7 +127,7 @@ namespace feather
 
                     //std::cout << "added " << uid << " to the uid_update state which is " << feather::cstate.uid_update.size() << std::endl;
                     
-                    feather::scenegraph::update();
+                    //feather::scenegraph::update();
             });
 
             return s;
