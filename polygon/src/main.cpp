@@ -45,9 +45,7 @@ using namespace feather;
 #define POLYGON_PLANE 321
 #define POLYGON_CUBE 322
 
-
 PLUGIN_INIT("Polygon","Polygon objects and tools","Richard Layman",POLYGON_SHAPE,POLYGON_CUBE)
-
 
 /*
  ***************************************
@@ -114,7 +112,16 @@ namespace feather
                 //GL_DRAW_MESH(tf)
                 
                 info.program->bind();
+
                 info.program->setAttributeValue(node.glLightPosition, lpos);
+                info.program->setAttributeValue(node.glLightAmbient, QColor(0,0,0));
+                info.program->setAttributeValue(node.glLightDiffuse, QColor(255,255,255));
+                info.program->setAttributeValue(node.glLightSpecular, QColor(0,0,0));
+                info.program->setAttributeValue(node.glMaterialAmbient, QColor(0,0,0));
+                info.program->setAttributeValue(node.glMaterialDiffuse, QColor(255,255,255));
+                info.program->setAttributeValue(node.glMaterialSpecular, QColor(0,0,0));
+                info.program->setAttributeValue(node.glMaterialShininess, 0.5);
+
                 info.program->setUniformValue(node.glMatrix, *info.view);
 
                 info.program->enableAttributeArray(node.glVertex);
