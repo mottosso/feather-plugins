@@ -113,12 +113,14 @@ namespace feather
                 
                 info.program->bind();
 
+                FColorRGB lcolor = scenegraph::node_layer(node.uid)->color;
+                info.program->setUniformValue(node.glSelected, false);
                 info.program->setAttributeValue(node.glLightPosition, lpos);
                 info.program->setAttributeValue(node.glLightAmbient, QColor(0,0,0));
                 info.program->setAttributeValue(node.glLightDiffuse, QColor(255,255,255));
                 info.program->setAttributeValue(node.glLightSpecular, QColor(0,0,0));
                 info.program->setAttributeValue(node.glMaterialAmbient, QColor(0,0,0));
-                info.program->setAttributeValue(node.glMaterialDiffuse, QColor(255,255,255));
+                info.program->setAttributeValue(node.glMaterialDiffuse, QColor(lcolor.int_red(),lcolor.int_green(),lcolor.int_blue()));
                 info.program->setAttributeValue(node.glMaterialSpecular, QColor(0,0,0));
                 info.program->setAttributeValue(node.glMaterialShininess, 0.5);
 
