@@ -57,6 +57,7 @@ PLUGIN_INIT("Polygon","Polygon objects and tools","Richard Layman",POLYGON_SHAPE
 ADD_FIELD_TO_NODE(POLYGON_SHAPE,FNode,field::Node,field::connection::In,FNode(),1)
 // child
 ADD_FIELD_TO_NODE(POLYGON_SHAPE,FNode,field::Node,field::connection::Out,FNode(),2)
+
 // meshIn
 ADD_FIELD_TO_NODE(POLYGON_SHAPE,FMesh,field::Mesh,field::connection::In,FMesh(),3)
 // testIn
@@ -115,12 +116,13 @@ namespace feather
 
                 FColorRGB lcolor = scenegraph::node_layer(node.uid)->color;
                 info.program->setUniformValue(node.glSelected, false);
+                info.program->setAttributeValue(node.glLayerColor, QColor(lcolor.int_red(),lcolor.int_green(),lcolor.int_blue()));
                 info.program->setAttributeValue(node.glLightPosition, lpos);
                 info.program->setAttributeValue(node.glLightAmbient, QColor(0,0,0));
                 info.program->setAttributeValue(node.glLightDiffuse, QColor(255,255,255));
                 info.program->setAttributeValue(node.glLightSpecular, QColor(0,0,0));
                 info.program->setAttributeValue(node.glMaterialAmbient, QColor(0,0,0));
-                info.program->setAttributeValue(node.glMaterialDiffuse, QColor(lcolor.int_red(),lcolor.int_green(),lcolor.int_blue()));
+                info.program->setAttributeValue(node.glMaterialDiffuse, QColor(255,255,255));
                 info.program->setAttributeValue(node.glMaterialSpecular, QColor(0,0,0));
                 info.program->setAttributeValue(node.glMaterialShininess, 0.5);
 
@@ -165,14 +167,12 @@ namespace feather
                 //info.program->setAttributeValue(node.glShaderDiffuse, color);
 
                 // WIREFRAME MODEL
-                /*
                 glLineWidth(1.5);
                 glView=1;
                 info.program->setUniformValue(node.glView, glView);
 
                 glPolygonMode(GL_FRONT, GL_LINE);
                 glDrawElements(GL_TRIANGLES, tf->value.gli.size(), GL_UNSIGNED_INT, &tf->value.gli[0]);
-                */
 
                 /*
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
@@ -207,9 +207,12 @@ NODE_INIT(POLYGON_SHAPE,node::Polygon,"polyshape.svg")
  *            POLYGON PLANE            *
  ***************************************
 */
-
-ADD_FIELD_TO_NODE(POLYGON_PLANE,int,field::Int,field::connection::In,2,1)
-ADD_FIELD_TO_NODE(POLYGON_PLANE,int,field::Int,field::connection::In,2,2)
+// parent
+ADD_FIELD_TO_NODE(POLYGON_PLANE,FNode,field::Node,field::connection::In,FNode(),1)
+// child
+ADD_FIELD_TO_NODE(POLYGON_PLANE,FNode,field::Node,field::connection::Out,FNode(),2)
+ADD_FIELD_TO_NODE(POLYGON_PLANE,int,field::Int,field::connection::In,2,3)
+ADD_FIELD_TO_NODE(POLYGON_PLANE,int,field::Int,field::connection::In,2,4)
 
 
 
@@ -231,10 +234,14 @@ NODE_INIT(POLYGON_PLANE,node::Polygon,"")
  *            POLYGON CUBE             *
  ***************************************
 */
-ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,0,1)
-ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,0,2)
+// parent
+ADD_FIELD_TO_NODE(POLYGON_CUBE,FNode,field::Node,field::connection::In,FNode(),1)
+// child
+ADD_FIELD_TO_NODE(POLYGON_CUBE,FNode,field::Node,field::connection::Out,FNode(),2)
 ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,0,3)
-ADD_FIELD_TO_NODE(POLYGON_CUBE,FMesh,field::Mesh,field::connection::Out,FMesh(),4)
+ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,0,4)
+ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,0,5)
+ADD_FIELD_TO_NODE(POLYGON_CUBE,FMesh,field::Mesh,field::connection::Out,FMesh(),6)
 
 namespace feather
 {
